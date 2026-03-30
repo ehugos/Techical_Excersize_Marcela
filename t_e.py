@@ -2,8 +2,6 @@
 import csv
 import warnings
 import logging
-
-# import numpy as np
 import pandas as pd
 
 # Global parameter for currently acknowleged origins, to be updated in the future
@@ -13,9 +11,27 @@ errArr = {"C": [0],
           "N": [0]}
 errDf = pd.DataFrame(data=errArr)
 
+# Capture any warnings
+from logging.handlers import RotatingFileHandler
+
+logger_file_handler = RotatingFileHandler(u'warning_log.log')
+logger_file_handler.setLevel(logging.DEBUG)
+
+logging.captureWarnings(True)
+
+logger = logging.getLogger(__name__)
+warnings_logger = logging.getLogger()
+
+logger.addHandler(logger_file_handler)
+logger.setLevel(logging.DEBUG)
+warnings_logger.addHandler(logger_file_handler)
+
 def main():
     # As we dont have a standard path, require manual input to file name 
-    # fName = input("Please prove full input path to the desired csv file: ")
+
+    # fPath = input("Please prove full input path to the desired csv file: ")
+    # fId = input("Please prove full file name: ")
+    # fName = fPath + "/" + fId
     fName = "samples.txt"
 
     # Boolean for saving dataframe to csv
@@ -66,6 +82,10 @@ def main():
 
     if(isSure):
         # Save percentage dataframe for each failed origin as a csv
+        #outPath = fPath + "Failed_Origins.csv"
+        #percDf.to_csv(outPath, 
+        #          encoding="utf-8", 
+        #          index=False)
         percDf.to_csv("Failed_Origins.csv", 
                   encoding="utf-8", 
                   index=False)
